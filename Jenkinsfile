@@ -23,25 +23,27 @@ pipeline {
         stage('Clean') {
             steps {
                 echo 'Nettoyage complet du dossier target'
-                sh 'rm -rf target || true'
+                sh 'rm -rf student-management/target || true'
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Compilation et packaging (sans exécuter les tests)'
-                sh 'mvn clean package -DskipTests'
+                dir('student-management') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Exécution des tests unitaires'
-                sh 'mvn test'
+                dir('student-management') {
+                    sh 'mvn test'
+                }
             }
         }
-
-        // Optional: Staging and Deploy stages can be added later
     }
 
     post {
