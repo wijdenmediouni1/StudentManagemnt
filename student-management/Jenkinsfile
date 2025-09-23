@@ -16,7 +16,7 @@ pipeline {
             steps {
                 echo 'Checkout du code depuis GitHub'
                 git branch: 'test',
-                    url: 'https://github.com/wijdenmediouni1/StudentManagemnt.git',
+                    url: 'https://github.com/wijdenmediouni1/StudentManagemnt/student-management.git',
                     credentialsId: 'github_token'
             }
         }
