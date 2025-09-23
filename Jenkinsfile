@@ -15,7 +15,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checkout du code depuis GitHub'
-                git url: 'https://github.com/wijdenmediouni1/StudentManagemnt.git',
+                git branch: 'main',
+                    url: 'https://github.com/wijdenmediouni1/StudentManagemnt.git',
                     credentialsId: 'github_token'
             }
         }
@@ -23,29 +24,42 @@ pipeline {
         stage('Clean') {
             steps {
                 echo 'Nettoyage complet du dossier target'
-                sh 'rm -rf student-management/target || true'
+                sh 'rm -rf target || true'
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Compilation et packaging (sans exécuter les tests)'
-                dir('student-management') {
-                    sh 'ls -la'  // juste pour vérifier que pom.xml est là
+                // Maven sera exécuté dans le dossier contenant le pom.xml
+                dir('.') {
                     sh 'mvn clean package -DskipTests'
                 }
             }
         }
 
-    
+       
     }
 
     post {
         success {
             echo 'Pipeline terminé avec succès !'
+            emailext(
+                subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Le build a réussi !\nVoir les détails ici : ${env.BUILD_URL}",
+                to: "wijden.mediouni@esprit.tn"
+            )
         }
         failure {
             echo 'Pipeline échoué !'
+            emailext(
+                subject: "Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Le build a échoué !\nVoir les détails ici : ${env.BUILD_URL}",
+                to: "wijden.mediouni@esprit.tn"
+            )
+        }
+        always {
+            echo 'Fin du pipeline'
         }
     }
 }
