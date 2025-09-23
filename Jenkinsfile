@@ -15,8 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checkout du code depuis GitHub'
-                git branch: 'test',
-                    url: 'https://github.com/wijdenmediouni1/StudentManagemnt.git',
+                git url: 'https://github.com/wijdenmediouni1/StudentManagemnt.git',
                     credentialsId: 'github_token'
             }
         }
@@ -42,7 +41,7 @@ pipeline {
             }
         }
 
-        // Optional: Staging and Deploy can be added later
+        // Optional: Staging and Deploy stages can be added later
     }
 
     post {
