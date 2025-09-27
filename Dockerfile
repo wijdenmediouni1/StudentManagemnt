@@ -1,12 +1,15 @@
-# Étape 1 : Build Maven
 FROM maven:3.9.2-eclipse-temurin-17 AS build
 WORKDIR /app
+
+# Copier pom.xml et src/ avant de build
 COPY pom.xml .
+COPY src ./src
+
+# Build le projet
 RUN mvn clean install -DskipTests
 
-# Étape 2 : Runtime
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY --from=build /app/target/student-management-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]
