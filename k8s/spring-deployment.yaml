@@ -16,6 +16,7 @@ spec:
       containers:
         - name: student-management
           image: wejdenmediouni/student-management:1.0.0
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:
@@ -25,21 +26,21 @@ spec:
               value: root
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
-                 secretKeyRef:
-                   name: mysql-secret
-                   key: mysql-root-password
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+---
 apiVersion: v1
 kind: Service
 metadata:
-   name: spring-service
-   namespace: devops
+  name: spring-service
+  namespace: devops
 spec:
-   selector:
-       app: student-management
-   ports:
-      - protocol: TCP
-        port: 8080
-        targetport: 8080
-        nodePort: 30080
-   type: NodePort
-
+  selector:
+    app: student-management
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080
+  type: NodePort
