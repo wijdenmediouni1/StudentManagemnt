@@ -17,7 +17,7 @@ spec:
         - name: student-management
           image: wejdenmediouni/student-management:1.0.0
           ports:
-            - containerPort: 8080
+            - containerPort: 8089   # ⚠️ correspond au port réel du container
           env:
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-service:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
@@ -41,7 +41,7 @@ spec:
     app: student-management
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
-      nodePort: 32639
+      port: 8080           # port interne du service (dans le cluster)
+      targetPort: 8089     # ⚠️ doit correspondre au port réel du container
+      nodePort: 32639      # port fixe exposé sur Minikube
   type: NodePort
